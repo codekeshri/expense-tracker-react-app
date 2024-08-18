@@ -1,0 +1,24 @@
+ctrl + 0 => shift focus to editor area
+ctrl + 1 => shift focus to sidebar
+
+ctrl + ` => open terminal in new tab
+
+type nul > a.txt => creates a new file
+del a.txt => deletes this
+
+mkdir a => creates an empty dir a
+rmdir a => deletes it
+
+ctrl + , => opens up settings
+
+ctrl + p => toggle through all files
+ctrl + t => searches symbols/words 
+
+ctrl + shift + p => surf entire vscode 
+
+ctrl + L => selects that code line
+
+alt + shift + right arrow =>   selects the entire code block { } 
+
+
+

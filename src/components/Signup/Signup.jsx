@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export const Signup = () => {
   const [email, setEmail] = useState("");
@@ -7,6 +8,8 @@ export const Signup = () => {
   const [password, setPassword] = useState("");
 
   const [isSignup, setIsSignup] = useState(false);
+
+  const navigate = useNavigate();
 
   const emailInputHandler = (e) => {
     setEmail(e.target.value);
@@ -28,30 +31,53 @@ export const Signup = () => {
 
   const signupHandler = async (e) => {
     e.preventDefault();
+    try {
+      const res = await axios.post(url, {
+        email,
+        password,
+        returnSecureToken: true,
+      });
 
-    const res = await axios.post(url, {
-      email,
-      username,
-      password,
-      returnSecureToken: true,
-    });
-    console.log(res.data);
-    setEmail("");
-    setUsername("");
-    setPassword("");
+      console.log("singnup successful", res.data);
+      setEmail("");
+      setUsername("");
+      setPassword("");
+    } catch (error) {
+      if (error.response) {
+        console.error(
+          "Error if:",
+          error.response.data.error.message,
+          error.response.data
+        );
+      } else {
+        console.error("Error else:", error.message);
+      }
+    }
   };
 
   const signinHandler = async (e) => {
     e.preventDefault();
-    const res = await axios.post(url, {
-      username,
-      password,
-      returnSecureToken: true,
-    });
-    console.log(res.data);
-    setEmail("");
-    setUsername("");
-    setPassword("");
+    try {
+      const res = await axios.post(url, {
+        email,
+        password,
+        returnSecureToken: true,
+      });
+      navigate("/home");
+      console.log("signin successful", email, password, res.data);
+      setEmail("");
+      setUsername("");
+      setPassword("");
+    } catch (error) {
+      if (error.response) {
+        console.error(
+          "Error during sign up:",
+          error.response.data.error.message
+        );
+      } else {
+        console.error("Error during sign up:", error.message);
+      }
+    }
   };
 
   const linkToggle = (e) => {
@@ -68,18 +94,18 @@ export const Signup = () => {
           <input
             type="text"
             className="input"
-            onChange={emailInputHandler}
-            placeholder="your email"
-            value={email}
+            onChange={usernameInputHandler}
+            placeholder="username"
+            value={username}
           />
         )}
         <br />
         <input
           type="text"
           className="input"
-          onChange={usernameInputHandler}
-          placeholder="username"
-          value={username}
+          onChange={emailInputHandler}
+          placeholder="your email"
+          value={email}
         />
         <br />
         <input
