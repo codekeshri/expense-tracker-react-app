@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
 
 export const Signup = () => {
   const [email, setEmail] = useState("");
@@ -39,11 +40,13 @@ export const Signup = () => {
       });
 
       console.log("singnup successful", res.data);
+      toast.success(res.message);
       setEmail("");
       setUsername("");
       setPassword("");
     } catch (error) {
       if (error.response) {
+        toast.error(error.message);
         console.error(
           "Error if:",
           error.response.data.error.message,
@@ -63,18 +66,24 @@ export const Signup = () => {
         password,
         returnSecureToken: true,
       });
+      toast.success("You logged in successfully");
+      console.log(res);
+      localStorage.setItem("idToken", res.data.idToken);
+      localStorage.setItem("refreshToken", res.data.refreshToken);
+      localStorage.setItem("localId", res.data.localId);
       navigate("/home");
-      console.log("signin successful", email, password, res.data);
       setEmail("");
       setUsername("");
       setPassword("");
     } catch (error) {
       if (error.response) {
+        toast.error(error.message);
         console.error(
           "Error during sign up:",
           error.response.data.error.message
         );
       } else {
+        toast.error(error.message);
         console.error("Error during sign up:", error.message);
       }
     }
@@ -84,6 +93,26 @@ export const Signup = () => {
     e.preventDefault();
     setIsSignup(!isSignup);
     console.log("linkToggle");
+  };
+
+  const forgotPasswordHandler = async (e) => {
+    e.preventDefault();
+    const payload = {
+      requestType: "PASSWORD_RESET",
+      email: email,
+    };
+    const url =
+      "https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyDB_xv6dB9fyCD97pI4UeFDSFuz-qig94A";
+    try {
+      const res = await axios.post(url, payload);
+      toast.success("Mail sent to your email for password reset");
+    } catch (error) {
+      if (error.response) {
+        toast.error(error.message);
+      } else {
+        toast.error(error.message);
+      }
+    }
   };
 
   return (
@@ -123,6 +152,12 @@ export const Signup = () => {
         >
           {isSignup ? "Register" : "Login"}
         </button>
+        <br />
+        {!isSignup && (
+          <a href="" onClick={forgotPasswordHandler}>
+            Forgot Password
+          </a>
+        )}
         <br />
         <a href="http://localhost:5173/" onClick={linkToggle}>
           {isSignup ? "Click here to Login" : "Click here to Signup"}
